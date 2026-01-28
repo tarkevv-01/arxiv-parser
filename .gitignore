@@ -1,3 +1,34 @@
+# -----------------------------
+# Python / FastAPI / venv
+# -----------------------------
+
+# виртуальное окружение
+.venv/
+
+# кэш Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# тесты и output
+*.log
+*.pytest_cache/
+.output/
+*.sqlite3
+
+# Local environment variables
+.env
+.env.*   # если есть файлы типа .env.local, .env.dev
+
+
+# IDE / редакторы
+.vscode/
+.idea/
+
+# -----------------------------
+# AL / Dynamics 365
+# -----------------------------
 ### AL ###
 #Template for AL projects for Dynamics 365 Business Central
 #launch.json folder
