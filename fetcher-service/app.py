@@ -124,7 +124,7 @@ async def fetch_and_analyze(request: FetchRequest):
     fetch_result = await fetch_articles(request)
     
     # Отправляем на анализ
-    analyzer_url = os.getenv("ANALYZER_SERVICE_URL", "http://localhost:8001")
+    analyzer_url = os.getenv("ANALYZER_SERVICE_URL", "http://localhost:9001")
     
     try:
         async with httpx.AsyncClient(timeout=120.0) as client:
