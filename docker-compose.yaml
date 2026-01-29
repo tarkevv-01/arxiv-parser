@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  fetcher-service:
+    build:
+      context: ./fetcher-service
+    ports:
+      - "9000:9000"
+    env_file:
+      - .env
+    networks:
+      - app-network
+
+  analyzer-service:
+    build:
+      context: ./article-analyzer-service
+    ports:
+      - "9001:9001"
+    env_file:
+      - .env
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

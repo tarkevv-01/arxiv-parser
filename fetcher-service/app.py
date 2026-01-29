@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List
 import httpx
+import os
 import feedparser
 
 app = FastAPI(title="Article Fetcher Service")
@@ -113,6 +114,40 @@ async def extract_pdf_text(pdf_url: str, max_pages: int = 10) -> Optional[str]:
     except Exception as e:
         print(f"Ошибка при извлечении текста из PDF: {e}")
         return None
+
+
+@app.post("/fetch-and-analyze", response_model=dict)
+async def fetch_and_analyze(request: FetchRequest):
+    """Получение и автоматический анализ статей"""
+    
+    # Получаем статьи
+    fetch_result = await fetch_articles(request)
+    
+    # Отправляем на анализ
+    analyzer_url = os.getenv("ANALYZER_SERVICE_URL", "http://localhost:8001")
+    
+    try:
+        async with httpx.AsyncClient(timeout=120.0) as client:
+            response = await client.post(
+                f"{analyzer_url}/batch-analyze",
+                json={
+                    "articles": [article.dict() for article in fetch_result.articles],
+                    "max_concurrent": 3
+                }
+            )
+            response.raise_for_status()
+            analysis_result = response.json()
+        
+        return {
+            "articles": fetch_result.articles,
+            "analysis": analysis_result
+        }
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Ошибка при анализе: {str(e)}"
+        )
 
 @app.get("/health")
 async def health_check():

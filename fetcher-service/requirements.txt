@@ -1,0 +1,6 @@
+fastapi==0.128.0
+uvicorn==0.40.0
+httpx==0.28.1
+feedparser==6.0.12
+PyMuPDF==1.26.7
+pydantic==2.12.5
